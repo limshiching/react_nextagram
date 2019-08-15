@@ -31,3 +31,18 @@
     transform: rotate(360deg);
   }
 }
+
+.col-3 {
+  margin: auto;
+  text-align: center;
+  
+}
+
+.row {
+  background-color: aliceblue;
+}
+
+.UserPictures {
+  width: 25%;
+  padding: 10px;
+}

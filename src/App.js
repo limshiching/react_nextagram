@@ -1,26 +1,69 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
+import NavBar from './components/NavBar';
+import axios from 'axios';
+import Loading from './components/Loading';
+import Homepage from './page/Homepage';
+import UserProfilePage from './page/UserProfilePage';
+import MyProfilePage from './page/MyProfilePage';
+// import UserModal from './components/UserModal';
+import UploadPage from './page/UploadPage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    users: [],
+    loading: true,
+  };
+
+  componentDidMount = () => {
+
+    // let JWT = JSON.parse(localStorage.getItem("JWT"));
+
+    axios({
+      method: "GET",
+      url: "https://insta.nextacademy.com/api/v1/users/",
+      // headers: {
+      //   Authorization: `Bearer ${JWT.auth_token}`
+      // }
+    }).then(result => {
+      console.log(result);
+    });
+
+    axios.get('https://insta.nextacademy.com/api/v1/users').then(result => {
+      this.setState({
+        users: result.data,
+        loading: false
+      });
+      // setTimeout(() => { this.setState({ isLoading: false }) }, 50)
+    });
+  };
+
+  render() {
+    const { users, loading } = this.state;
+
+    return (
+
+      <>
+        <NavBar />
+
+        <Loading loading={loading} />
+
+        <Switch>
+          <Route exact path="/" component={props => <Homepage {...props} users={users} />} />
+          <Route exact path="/users/:id" component={props => <UserProfilePage {...props} />} />
+          <Route path="/profile" component={props => <MyProfilePage users={users} {...props} />} />
+          <Route exact path="/uploadpage" component={UploadPage} />
+
+        </Switch>
+
+
+
+      </>
+    );
+  }
 }
 
+
 export default App;
+
